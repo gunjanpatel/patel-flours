@@ -107,7 +107,7 @@
               id="name"
               v-model="form.name"
               type="text"
-              placeholder="Dinanshi Patel"
+              placeholder=""
               class="w-full px-4 py-3 rounded-xl border text-sm transition-colors outline-none"
               style="background-color: var(--bg-muted); color: var(--text-primary)"
               :class="errors.name ? 'border-red-400 focus:border-red-400' : 'border-transparent focus:border-brand-500'"
@@ -144,6 +144,14 @@
           </div>
         </div>
 
+        <!-- Turnstile widget -->
+        <TurnstileWidget
+          v-if="turnstileSiteKey"
+          :site-key="turnstileSiteKey"
+          @verified="turnstileToken = $event"
+          @error="turnstileToken = ''"
+        />
+
         <!-- API error -->
         <div v-if="apiError" class="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-red-400 flex items-start gap-2">
           <span class="mt-0.5">✕</span>
@@ -153,7 +161,7 @@
         <!-- Submit -->
         <button
           class="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-4 rounded-full transition-colors flex items-center justify-center gap-2"
-          :disabled="submitting"
+          :disabled="submitting || (!!turnstileSiteKey && !turnstileToken)"
           @click="submitOrder"
         >
           <svg v-if="submitting" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -176,10 +184,12 @@ useHead({ title: 'Checkout — Patel Flours' })
 
 const config = useRuntimeConfig()
 const workerUrl: string = config.public.workerUrl ?? 'MOCK'
+const turnstileSiteKey: string = config.public.turnstileSiteKey ?? ''
+const turnstileToken = ref('')
 const isDevMode = computed(() => !workerUrl || workerUrl === 'MOCK')
 
 const { isAllowed, isPending } = useDenmarkOnly()
-console.log('full config.public:', JSON.stringify(config.public))
+
 // Redirect non-DK visitors silently — watch until geo check resolves
 watch(isAllowed, (allowed) => {
   if (!isPending.value && !allowed) navigateTo('/')
@@ -253,6 +263,7 @@ async function submitOrder() {
     })),
     total: total.value,
     payment_method: paymentMethod.value,
+    turnstile_token: turnstileToken.value,
   }
 
   try {

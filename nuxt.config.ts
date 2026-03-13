@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       sheetId: process.env.NUXT_PUBLIC_SHEET_ID || 'MOCK',
-      workerUrl: process.env.NUXT_PUBLIC_CLOUDFLARE_URL || 'MOCK',
+      workerUrl: process.env.NUXT_PUBLIC_WORKER_URL || 'MOCK',
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
     },
   },
 
