@@ -82,7 +82,7 @@ async function sendTelegram(env: Env, orderId: string, payload: OrderPayload): P
   await fetch(`https://api.telegram.org/bot${env.TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text, parse_mode: 'Markdown' }),
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: text, parse_mode: 'Markdown' }),
   })
 }
 
