@@ -1,4 +1,4 @@
-# The Grain Co. — Organic Shop
+# Patel Flours — Organic Shop
 
 A full-stack Nuxt 3 e-commerce site for an organic food brand.
 

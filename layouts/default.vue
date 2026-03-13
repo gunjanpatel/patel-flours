@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-oat">
+  <div class="min-h-screen flex flex-col" style="background-color: var(--bg-page)">
     <NavBar />
     <CartDrawer />
     <main class="flex-1">

@@ -1,9 +1,21 @@
 <template>
   <div class="max-w-2xl mx-auto px-4 sm:px-6 py-12">
     <!-- Header -->
-    <div class="mb-10">
+    <div class="mb-8">
       <p class="text-xs font-medium text-accent-500 uppercase tracking-widest mb-2">Almost There</p>
-      <h1 class="font-serif text-4xl text-stone-800">Checkout</h1>
+      <h1 class="font-serif text-4xl" style="color: var(--text-primary)">Checkout</h1>
+    </div>
+
+    <!-- Dev mode banner -->
+    <div v-if="isDevMode" class="mb-6 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3.5">
+      <span class="text-amber-500 text-lg leading-none mt-0.5">⚠</span>
+      <div class="text-sm">
+        <p class="font-medium text-amber-800">Dev mode — orders saved to local SQLite</p>
+        <p class="text-amber-600 mt-0.5">
+          Orders are stored in <code class="bg-amber-100 px-1 py-0.5 rounded text-xs">.data/orders.db</code> (D1-compatible schema).
+          Set <code class="bg-amber-100 px-1 py-0.5 rounded text-xs">NUXT_PUBLIC_WORKER_URL</code> in <code class="bg-amber-100 px-1 py-0.5 rounded text-xs">.env</code> to use your Cloudflare Worker instead.
+        </p>
+      </div>
     </div>
 
     <!-- Empty cart -->
@@ -27,10 +39,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
           </svg>
         </div>
-        <h2 class="font-serif text-3xl text-stone-800">Order Placed!</h2>
-        <p class="text-stone-500 text-sm">Thank you for your order. We'll be in touch shortly.</p>
-        <div class="bg-stone-50 rounded-2xl px-6 py-4 inline-block">
-          <p class="text-xs text-stone-400 mb-1">Order ID</p>
+        <h2 class="font-serif text-3xl" style="color: var(--text-primary)">Order Placed!</h2>
+        <p class="text-sm" style="color: var(--text-secondary)">
+          {{ isDevMode ? 'This was a dev-mode order — saved to .data/orders.db.' : "Thank you! We'll be in touch shortly." }}
+        </p>
+        <div class="rounded-2xl px-6 py-4" style="background-color: var(--bg-muted) inline-block">
+          <p class="text-xs mb-1" style="color: var(--text-muted)">Order ID</p>
           <p class="font-mono text-brand-600 font-semibold text-lg">{{ orderId }}</p>
         </div>
         <div class="pt-2">
@@ -43,9 +57,10 @@
 
     <!-- Checkout form -->
     <div v-if="safeCart.length > 0 && !orderSuccess" class="space-y-8">
+
       <!-- Order summary -->
-      <div class="bg-white rounded-2xl border border-stone-100 p-6 space-y-4">
-        <h2 class="font-serif text-xl text-stone-800">Order Summary</h2>
+      <div class="rounded-2xl border p-6" style="background-color: var(--bg-surface); border-color: var(--border) space-y-4">
+        <h2 class="font-serif text-xl" style="color: var(--text-primary)">Order Summary</h2>
         <div class="divide-y divide-stone-50">
           <div
             v-for="item in safeCart"
@@ -59,33 +74,52 @@
               loading="lazy"
             />
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-stone-800 truncate">{{ item.name }}</p>
-              <p v-if="item.variant" class="text-xs text-stone-400">{{ item.variant }}</p>
+              <p class="text-sm font-medium truncate" style="color: var(--text-primary)">{{ item.name }}</p>
+              <p v-if="item.variant" class="text-xs" style="color: var(--text-muted)">{{ item.variant }}</p>
             </div>
             <div class="text-right flex-shrink-0">
-              <p class="text-sm font-semibold text-stone-800">${{ (item.price * item.qty).toFixed(2) }}</p>
-              <p class="text-xs text-stone-400">× {{ item.qty }}</p>
+              <p class="text-sm font-semibold" style="color: var(--text-primary)">DKK {{ (item.price * item.qty).toFixed(2) }}</p>
+              <p class="text-xs" style="color: var(--text-muted)">× {{ item.qty }}</p>
             </div>
           </div>
         </div>
         <div class="border-t border-stone-100 pt-3 flex justify-between items-center">
-          <span class="text-stone-600 font-medium">Total</span>
-          <span class="text-xl font-semibold text-brand-600">${{ total.toFixed(2) }}</span>
+          <span class="font-medium" style="color: var(--text-secondary)">Total</span>
+          <span class="text-xl font-semibold text-brand-600">DKK {{ total.toFixed(2) }}</span>
         </div>
       </div>
 
+      <!-- Payment method -->
+      <div class="rounded-2xl border p-6" style="background-color: var(--bg-surface); border-color: var(--border) space-y-4">
+        <h2 class="font-serif text-xl" style="color: var(--text-primary)">Payment Method</h2>
+        <label class="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors"
+          :class="paymentMethod === 'cash_on_delivery' ? 'border-brand-500 bg-brand-50' : 'border-stone-200 hover:border-stone-300'"
+        >
+          <input
+            v-model="paymentMethod"
+            type="radio"
+            value="cash_on_delivery"
+            class="mt-0.5 accent-brand-500"
+          />
+          <div>
+            <p class="text-sm font-medium" style="color: var(--text-primary)">Payment on Delivery</p>
+            <p class="text-xs mt-0.5" style="color: var(--text-muted)">Pay when we deliver your flour.</p>
+          </div>
+        </label>
+      </div>
+
       <!-- Contact details -->
-      <div class="bg-white rounded-2xl border border-stone-100 p-6 space-y-5">
-        <h2 class="font-serif text-xl text-stone-800">Your Details</h2>
+      <div class="rounded-2xl border p-6" style="background-color: var(--bg-surface); border-color: var(--border) space-y-5">
+        <h2 class="font-serif text-xl" style="color: var(--text-primary)">Your Details</h2>
 
         <div class="space-y-1.5">
-          <label class="text-sm font-medium text-stone-700" for="name">Full Name</label>
+          <label class="text-sm font-medium" style="color: var(--text-secondary)" for="name">Full Name</label>
           <input
             id="name"
             v-model="form.name"
             type="text"
             placeholder="Jane Smith"
-            class="w-full px-4 py-3 rounded-xl border text-sm transition-colors outline-none"
+            class="w-full px-4 py-3 rounded-xl border text-sm transition-colors outline-none" style="background-color: var(--bg-surface); color: var(--text-primary)"
             :class="errors.name ? 'border-red-300 focus:border-red-400' : 'border-stone-200 focus:border-brand-400'"
             @input="errors.name = ''"
           />
@@ -93,13 +127,13 @@
         </div>
 
         <div class="space-y-1.5">
-          <label class="text-sm font-medium text-stone-700" for="phone">Phone Number</label>
+          <label class="text-sm font-medium" style="color: var(--text-secondary)" for="phone">Phone Number</label>
           <input
             id="phone"
             v-model="form.phone"
             type="tel"
             placeholder="+1 555 012 3456"
-            class="w-full px-4 py-3 rounded-xl border text-sm transition-colors outline-none"
+            class="w-full px-4 py-3 rounded-xl border text-sm transition-colors outline-none" style="background-color: var(--bg-surface); color: var(--text-primary)"
             :class="errors.phone ? 'border-red-300 focus:border-red-400' : 'border-stone-200 focus:border-brand-400'"
             @input="errors.phone = ''"
           />
@@ -108,7 +142,8 @@
       </div>
 
       <!-- API error -->
-      <div v-if="apiError" class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600">
+      <div v-if="apiError" class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 flex items-start gap-2">
+        <span class="text-red-400 mt-0.5">✕</span>
         {{ apiError }}
       </div>
 
@@ -122,10 +157,10 @@
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
         </svg>
-        {{ submitting ? 'Placing Order…' : 'Place Order' }}
+        {{ submitting ? 'Placing Order…' : isDevMode ? 'Place Order (Dev Mode)' : 'Place Order' }}
       </button>
 
-      <p class="text-center text-xs text-stone-400">
+      <p class="text-center text-xs" style="color: var(--text-muted)">
         By placing an order you agree to our terms of service.
       </p>
     </div>
@@ -133,9 +168,11 @@
 </template>
 
 <script setup lang="ts">
-import { WORKER_URL } from '~/utils/config'
+useHead({ title: 'Checkout — Patel Flours' })
 
-useHead({ title: 'Checkout — The Grain Co.' })
+const config = useRuntimeConfig()
+const workerUrl: string = config.public.workerUrl ?? 'MOCK'
+const isDevMode = computed(() => !workerUrl || workerUrl === 'MOCK')
 
 const { cart, total, clear } = useCart()
 
@@ -145,6 +182,7 @@ const safeCart = computed(() =>
 
 const form = reactive({ name: '', phone: '' })
 const errors = reactive({ name: '', phone: '' })
+const paymentMethod = ref<'cash_on_delivery'>('cash_on_delivery')
 const submitting = ref(false)
 const apiError = ref('')
 const orderSuccess = ref(false)
@@ -154,8 +192,11 @@ const PHONE_RE = /^\+?[0-9\s\-().]{8,15}$/
 
 function validate(): boolean {
   let valid = true
-  if (!form.name.trim()) {
-    errors.name = 'Name is required.'
+  errors.name = ''
+  errors.phone = ''
+
+  if (!form.name.trim() || form.name.trim().length < 2) {
+    errors.name = 'Please enter your full name.'
     valid = false
   }
   const digits = form.phone.replace(/\D/g, '')
@@ -171,36 +212,47 @@ async function submitOrder() {
   submitting.value = true
   apiError.value = ''
 
+  const payload = {
+    name: form.name.trim(),
+    phone: form.phone.trim(),
+    items: safeCart.value.map((i) => ({
+      sku: i.sku,
+      name: i.name,
+      variant: i.variant,
+      qty: i.qty,
+      price: i.price,
+    })),
+    total: total.value,
+    payment_method: paymentMethod.value,
+  }
+
   try {
-    const payload = {
-      name: form.name.trim(),
-      phone: form.phone.trim(),
-      items: safeCart.value.map((i) => ({
-        sku: i.sku,
-        name: i.name,
-        variant: i.variant,
-        qty: i.qty,
-        price: i.price,
-      })),
-      total: total.value,
-    }
-
-    const workerBase = WORKER_URL && WORKER_URL !== '<WORKER_URL>' ? WORKER_URL : null
-
-    if (!workerBase) {
-      // Dev mode: simulate success
-      await new Promise((r) => setTimeout(r, 800))
-      orderId.value = `GC-${Date.now().toString(36).toUpperCase()}`
-      orderSuccess.value = true
-      clear()
+    if (isDevMode.value) {
+      // ── Dev mode: POST to local Nitro API route (stores in .data/orders.db) ──
+      const res = await $fetch<{ success: boolean; orderId: string }>('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+      })
+      if (res.success) {
+        orderId.value = res.orderId
+        orderSuccess.value = true
+        clear()
+      } else {
+        apiError.value = 'Something went wrong. Please try again.'
+      }
       return
     }
 
-    const res = await $fetch<{ success: boolean; orderId: string }>(`${workerBase}/order`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: payload,
-    })
+    // ── Production: POST to Cloudflare Worker ────────────────────────────
+    const res = await $fetch<{ success: boolean; orderId: string }>(
+      `${workerUrl}/order`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+      }
+    )
 
     if (res.success) {
       orderId.value = res.orderId
@@ -210,7 +262,11 @@ async function submitOrder() {
       apiError.value = 'Something went wrong. Please try again.'
     }
   } catch (e: any) {
-    apiError.value = e?.data?.error ?? 'Failed to place order. Please try again.'
+    console.error('[checkout] Worker error:', e)
+    apiError.value =
+      e?.data?.error ??
+      e?.message ??
+      'Failed to reach the server. Please check your connection and try again.'
   } finally {
     submitting.value = false
   }

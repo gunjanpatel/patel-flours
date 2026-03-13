@@ -4,19 +4,52 @@
 
 @layer base {
   html {
-    background-color: #FAF7F2;
-    color: #1a1a1a;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background-color: #FAF7F2;
   }
 
   h1, h2, h3 {
     font-family: 'DM Serif Display', Georgia, serif;
+  }
+
+  /* ── Light mode ── */
+  :root {
+    --bg-page:          #FAF7F2;
+    --bg-surface:       #FFFFFF;
+    --bg-muted:         #F2EFE9;
+    --text-primary:     #1c1917;
+    --text-secondary:   #78716c;
+    --text-muted:       #a8a29e;
+    --border:           #e7e5e4;
+    --border-muted:     #f5f4f2;
+    --accent:           #b45309;
+    --accent-bg:        #fffbeb;
+    --accent-border:    #fde68a;
+  }
+
+  /* ── Dark mode ── */
+  html.dark {
+    --bg-page:          #141210;
+    --bg-surface:       #1e1b18;
+    --bg-muted:         #252118;
+    --text-primary:     #f0ebe2;
+    --text-secondary:   #a89e8e;
+    --text-muted:       #6b6358;
+    --border:           #2e2a24;
+    --border-muted:     #252118;
+    --accent:           #fbbf24;
+    --accent-bg:        #1c1700;
+    --accent-border:    #3d2f00;
+  }
+
+  html, body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
@@ -34,9 +67,9 @@
   }
 }
 
-/* Nuxt UI color overrides to match brand */
+/* Nuxt UI brand color overrides */
 :root {
-  --color-primary-50: #f2f7ee;
+  --color-primary-50:  #f2f7ee;
   --color-primary-100: #deecd4;
   --color-primary-200: #bed9aa;
   --color-primary-300: #97c17a;

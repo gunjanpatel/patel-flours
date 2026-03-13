@@ -3,7 +3,7 @@
     <Transition name="fade">
       <div
         v-if="cartOpen"
-        class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
+        class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
         @click.self="cartOpen = false"
       />
     </Transition>
@@ -11,17 +11,18 @@
     <Transition name="slide-right">
       <aside
         v-if="cartOpen"
-        class="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md bg-oat shadow-2xl flex flex-col"
+        class="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md shadow-2xl flex flex-col transition-colors duration-200"
+        style="background-color: var(--bg-page)"
       >
         <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-5 border-b border-stone-200">
-          <h2 class="font-serif text-xl text-stone-800">Your Cart</h2>
+        <div class="flex items-center justify-between px-6 py-5 border-b" style="border-color: var(--border)">
+          <h2 class="font-serif text-xl" style="color: var(--text-primary)">Your Cart</h2>
           <button
-            class="p-2 rounded-full hover:bg-stone-100 transition-colors"
+            class="p-2 rounded-full transition-colors hover:opacity-70"
             aria-label="Close cart"
             @click="cartOpen = false"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" :style="`color: var(--text-muted)`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -29,15 +30,15 @@
 
         <!-- Empty state -->
         <div v-if="safeCart.length === 0" class="flex-1 flex flex-col items-center justify-center gap-4 px-6">
-          <div class="w-20 h-20 rounded-full bg-stone-100 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <div class="w-20 h-20 rounded-full flex items-center justify-center" style="background-color: var(--bg-muted)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" :style="`color: var(--text-muted)`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.889-7.143a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
             </svg>
           </div>
-          <p class="text-stone-500 text-sm">Your cart is empty.</p>
+          <p class="text-sm" style="color: var(--text-muted)">Your cart is empty.</p>
           <NuxtLink
             to="/products"
-            class="text-sm font-medium text-brand-600 underline underline-offset-2"
+            class="text-sm font-medium text-brand-500 underline underline-offset-2"
             @click="cartOpen = false"
           >
             Browse Products
@@ -49,7 +50,8 @@
           <div
             v-for="item in safeCart"
             :key="`${item.sku}-${item.variant}`"
-            class="flex gap-4 bg-white rounded-2xl p-4 shadow-sm border border-stone-100"
+            class="flex gap-4 rounded-2xl p-4 border"
+            style="background-color: var(--bg-surface); border-color: var(--border)"
           >
             <img
               :src="item.image"
@@ -58,21 +60,23 @@
               loading="lazy"
             />
             <div class="flex-1 min-w-0">
-              <p class="font-medium text-stone-800 text-sm truncate">{{ item.name }}</p>
-              <p v-if="item.variant" class="text-xs text-stone-400 mt-0.5">{{ item.variant }}</p>
-              <p class="text-brand-600 font-semibold text-sm mt-1">${{ (item.price * item.qty).toFixed(2) }}</p>
+              <p class="font-medium text-sm truncate" style="color: var(--text-primary)">{{ item.name }}</p>
+              <p v-if="item.variant" class="text-xs mt-0.5" style="color: var(--text-muted)">{{ item.variant }}</p>
+              <p class="text-brand-500 font-semibold text-sm mt-1">DKK {{ (item.price * item.qty).toFixed(2) }}</p>
               <div class="flex items-center gap-2 mt-2">
                 <button
-                  class="w-7 h-7 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:bg-stone-100 transition-colors text-lg leading-none"
+                  class="w-7 h-7 rounded-full border flex items-center justify-center transition-colors text-lg leading-none"
+                  style="border-color: var(--border); color: var(--text-secondary)"
                   @click="updateQty(item.sku, item.variant, item.qty - 1)"
                 >−</button>
-                <span class="text-sm font-medium w-5 text-center">{{ item.qty }}</span>
+                <span class="text-sm font-medium w-5 text-center" style="color: var(--text-primary)">{{ item.qty }}</span>
                 <button
-                  class="w-7 h-7 rounded-full border border-stone-200 flex items-center justify-center text-stone-600 hover:bg-stone-100 transition-colors text-lg leading-none"
+                  class="w-7 h-7 rounded-full border flex items-center justify-center transition-colors text-lg leading-none"
+                  style="border-color: var(--border); color: var(--text-secondary)"
                   @click="updateQty(item.sku, item.variant, item.qty + 1)"
                 >+</button>
                 <button
-                  class="ml-auto p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                  class="ml-auto p-1.5 rounded-lg hover:bg-red-500/10 transition-colors"
                   aria-label="Remove item"
                   @click="remove(item.sku, item.variant)"
                 >
@@ -86,10 +90,10 @@
         </div>
 
         <!-- Footer -->
-        <div v-if="safeCart.length > 0" class="border-t border-stone-200 px-6 py-5 space-y-4">
+        <div v-if="safeCart.length > 0" class="border-t px-6 py-5 space-y-4" style="border-color: var(--border)">
           <div class="flex justify-between items-center">
-            <span class="text-stone-600 text-sm">Subtotal</span>
-            <span class="font-semibold text-stone-800 text-lg">${{ total.toFixed(2) }}</span>
+            <span class="text-sm" style="color: var(--text-secondary)">Subtotal</span>
+            <span class="font-semibold text-lg" style="color: var(--text-primary)">DKK {{ total.toFixed(2) }}</span>
           </div>
           <NuxtLink
             to="/checkout"
@@ -99,7 +103,8 @@
             Proceed to Checkout
           </NuxtLink>
           <button
-            class="block w-full text-center text-sm text-stone-400 hover:text-stone-600 transition-colors"
+            class="block w-full text-center text-sm transition-colors"
+            style="color: var(--text-muted)"
             @click="clear"
           >
             Clear cart
@@ -113,7 +118,6 @@
 <script setup lang="ts">
 const cartOpen = useState('cart-open', () => false)
 const { cart, total, updateQty, remove, clear } = useCart()
-
 const safeCart = computed(() => cart.value.filter(
   (item) => item && item.sku && item.name && item.price >= 0
 ))
@@ -122,7 +126,6 @@ const safeCart = computed(() => cart.value.filter(
 <style scoped>
 .fade-enter-active, .fade-leave-active { transition: opacity 0.25s ease; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
-
-.slide-right-enter-active, .slide-right-leave-active { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.slide-right-enter-active, .slide-right-leave-active { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
 .slide-right-enter-from, .slide-right-leave-to { transform: translateX(100%); }
 </style>

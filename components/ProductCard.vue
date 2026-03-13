@@ -1,25 +1,57 @@
 <template>
-  <div class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+  <div
+    class="rounded-2xl border overflow-hidden shadow-sm transition-all duration-200 group flex flex-col"
+    :class="product.active ? 'hover:shadow-md' : 'opacity-60'"
+    style="background-color: var(--bg-surface); border-color: var(--border)"
+  >
     <!-- Image -->
-    <NuxtLink :to="`/product/${product.sku}`" class="block overflow-hidden aspect-square bg-stone-50">
+    <NuxtLink :to="`/product/${product.sku}`" class="block overflow-hidden aspect-square relative" style="background-color: var(--bg-muted)">
       <img
         :src="product.image"
         :alt="product.name"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
       />
+      <span
+        v-if="!product.active"
+        class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-stone-800/85 text-white text-[10px] font-semibold tracking-wide uppercase"
+      >
+        Discontinued
+      </span>
     </NuxtLink>
 
     <!-- Body -->
     <div class="p-4 flex flex-col flex-1">
-      <NuxtLink :to="`/product/${product.sku}`" class="hover:text-brand-600 transition-colors">
-        <h3 class="font-serif text-base text-stone-800 leading-tight mb-1">{{ product.name }}</h3>
+      <NuxtLink :to="`/product/${product.sku}`" class="hover:text-brand-500 transition-colors">
+        <h3 class="font-serif text-base leading-tight mb-1" style="color: var(--text-primary)">{{ product.name }}</h3>
       </NuxtLink>
-      <p class="text-xs text-stone-400 mb-3 leading-relaxed flex-1">{{ product.short }}</p>
-      <div class="flex items-center justify-between mt-auto">
-        <span class="text-brand-600 font-semibold text-base">${{ product.price.toFixed(2) }}</span>
+      <p class="text-xs mb-3 leading-relaxed" style="color: var(--text-muted)">{{ product.short }}</p>
+
+      <!-- Variant chips -->
+      <div v-if="hasVariants" class="flex flex-wrap gap-1.5 mb-3">
         <button
-          class="bg-brand-500 hover:bg-brand-600 text-white text-xs font-medium px-3.5 py-2 rounded-full transition-colors flex items-center gap-1.5"
+          v-for="v in product.variants"
+          :key="v"
+          class="px-2.5 py-1 rounded-full text-xs border transition-colors leading-none"
+          :class="selectedVariant === v
+            ? 'bg-brand-500 text-white border-brand-500'
+            : 'hover:border-brand-400'"
+          :style="selectedVariant !== v ? `background-color: var(--bg-muted); color: var(--text-secondary); border-color: var(--border)` : ''"
+          @click.prevent="selectedVariant = v"
+        >
+          {{ v }}
+        </button>
+      </div>
+
+      <!-- Price + Add -->
+      <div class="flex items-center justify-between mt-auto">
+        <span class="text-brand-500 font-semibold text-base">
+          DKK {{ displayPrice.toFixed(2) }}
+        </span>
+        <button
+          class="text-white text-xs font-medium px-3.5 py-2 rounded-full transition-colors flex items-center gap-1.5"
+          :class="product.active ? 'bg-brand-500 hover:bg-brand-600' : 'bg-stone-400 cursor-not-allowed'"
+          :disabled="!product.active"
           @click.prevent="addToCart"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
@@ -38,14 +70,29 @@ import type { Product } from '~/utils/config'
 const props = defineProps<{ product: Product }>()
 const { add } = useCart()
 
+const hasVariants = computed(() => props.product.variants.length > 0)
+const selectedVariant = ref(props.product.variants[0] ?? '')
+
+watch(() => props.product.variants, (variants) => {
+  if (variants.length && !variants.includes(selectedVariant.value)) {
+    selectedVariant.value = variants[0]
+  }
+})
+
+const displayPrice = computed(() => {
+  const vp = props.product.variantPrices[selectedVariant.value]
+  return vp !== undefined ? vp : props.product.price
+})
+
 function addToCart() {
+  if (!props.product.active) return
   add({
     sku: props.product.sku,
     name: props.product.name,
     image: props.product.image,
-    price: props.product.price,
-    variant: props.product.variants[0] ?? '',
-    qty: 1,
+    price: displayPrice.value,
+    variant: selectedVariant.value,
+    qty: props.product.qtyDefault ?? 1,
   })
 }
 </script>

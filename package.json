@@ -1,5 +1,5 @@
 {
-  "name": "organic-shop",
+  "name": "patel-flour-factory",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@nuxt/ui": "^2.18.4",
+    "better-sqlite3": "^12.6.2",
     "nuxt": "^3.13.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260313.1",
     "@tailwindcss/typography": "^0.5.15",
+    "@types/better-sqlite3": "^7.6.13",
     "typescript": "^5.5.4"
   }
 }

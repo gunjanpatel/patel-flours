@@ -1,5 +1,12 @@
 export default defineNuxtConfig({
   ssr: false,
+  debug: true,
+  runtimeConfig: {
+    public: {
+      sheetId: process.env.NUXT_PUBLIC_SHEET_ID ?? 'MOCK',
+      workerUrl: process.env.NUXT_PUBLIC_WORKER_URL ?? 'MOCK',
+    },
+  },
 
   modules: ['@nuxt/ui'],
 
@@ -10,13 +17,13 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   colorMode: {
-    preference: 'light',
+    preference: 'system',
   },
 
   app: {
     baseURL: process.env.NUXT_APP_BASE_URL || '/',
     head: {
-      title: 'The Grain Co. — Organic & Natural Foods',
+      title: 'Patel Flours — Organic & Natural Foods',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

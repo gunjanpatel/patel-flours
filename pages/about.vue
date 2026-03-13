@@ -4,36 +4,32 @@
     <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-16">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
         <div class="space-y-6">
-          <p class="text-xs font-medium text-accent-500 uppercase tracking-widest">Our Story</p>
-          <h1 class="font-serif text-5xl text-stone-800 leading-tight">Rooted in nature, grown with care.</h1>
-          <p class="text-stone-500 leading-relaxed">
-            The Grain Co. was founded in 2018 by two food scientists who believed that clean eating shouldn't be complicated — or expensive. We set out to build direct relationships with certified organic farms and cut out the middlemen.
+          <p class="text-xs font-medium text-accent-400 uppercase tracking-widest">Our Story</p>
+          <h1 class="font-serif text-5xl leading-tight" style="color: var(--text-primary)">Where freshness matters more than profit</h1>
+          <p class="leading-relaxed" style="color: var(--text-secondary)">
+            It is not a business — it’s a small personal setup started to help friends and community members enjoy truly fresh flour without any commercial markup or complexity. What began as a simple hobby mill at home naturally grew into a shared community convenience: fresh flour, ground only when needed, with clean ingredients and no shortcuts.
           </p>
-          <p class="text-stone-500 leading-relaxed">
-            Today we work with over 30 farms across North America and Europe, sourcing the finest ancient grains, superseeds, and whole foods. Every product is third-party lab tested before it reaches your door.
+          <p class="leading-relaxed" style="color: var(--text-secondary)">
+            We do not aim to scale, expand, or turn this into a profit‑driven operation. We keep things small so the quality stays high, the process stays simple, and everyone gets flour that tastes the way it should — fresh, warm, and made with care.
           </p>
         </div>
         <div class="rounded-3xl overflow-hidden aspect-[4/3]">
-          <img
-            src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=700&q=85"
-            alt="Organic farm landscape"
-            class="w-full h-full object-cover"
-          />
+          <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=700&q=85" alt="Organic farm" class="w-full h-full object-cover" />
         </div>
       </div>
     </section>
 
     <!-- Values -->
-    <section class="bg-stone-50 py-16">
+    <section class="py-16 transition-colors duration-200" style="background-color: var(--bg-muted)">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <h2 class="font-serif text-3xl text-stone-800 text-center mb-12">What we stand for</h2>
+        <h2 class="font-serif text-3xl text-center mb-12" style="color: var(--text-primary)">What we aim for</h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
           <div v-for="value in values" :key="value.title" class="text-center space-y-4">
-            <div class="w-14 h-14 rounded-2xl bg-brand-50 flex items-center justify-center mx-auto">
+            <div class="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center mx-auto">
               <span class="text-3xl">{{ value.icon }}</span>
             </div>
-            <h3 class="font-serif text-xl text-stone-800">{{ value.title }}</h3>
-            <p class="text-sm text-stone-400 leading-relaxed">{{ value.desc }}</p>
+            <h3 class="font-serif text-xl" style="color: var(--text-primary)">{{ value.title }}</h3>
+            <p class="text-sm leading-relaxed" style="color: var(--text-muted)">{{ value.desc }}</p>
           </div>
         </div>
       </div>
@@ -41,19 +37,19 @@
 
     <!-- Team -->
     <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
-      <h2 class="font-serif text-3xl text-stone-800 mb-10">Meet the team</h2>
+      <h2 class="font-serif text-3xl mb-10" style="color: var(--text-primary)">Meet the team</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        <div v-for="member in team" :key="member.name" class="bg-white rounded-2xl border border-stone-100 p-6 space-y-3 shadow-sm">
-          <img
-            :src="member.photo"
-            :alt="member.name"
-            class="w-16 h-16 rounded-full object-cover"
-          />
+        <div
+          v-for="member in team" :key="member.name"
+          class="rounded-2xl border p-6 space-y-3 shadow-sm transition-colors duration-200"
+          style="background-color: var(--bg-surface); border-color: var(--border)"
+        >
+          <img :src="member.photo" :alt="member.name" class="w-16 h-16 rounded-full object-cover" />
           <div>
-            <p class="font-serif text-lg text-stone-800">{{ member.name }}</p>
-            <p class="text-xs text-accent-500 font-medium">{{ member.role }}</p>
+            <p class="font-serif text-lg" style="color: var(--text-primary)">{{ member.name }}</p>
+            <p class="text-xs text-accent-400 font-medium">{{ member.role }}</p>
           </div>
-          <p class="text-sm text-stone-400 leading-relaxed">{{ member.bio }}</p>
+          <p class="text-sm leading-relaxed" style="color: var(--text-muted)">{{ member.bio }}</p>
         </div>
       </div>
     </section>
@@ -61,44 +57,16 @@
 </template>
 
 <script setup lang="ts">
-useHead({ title: 'About Us — The Grain Co.' })
+useHead({ title: 'About Us — Patel Flours' })
 
 const values = [
-  {
-    icon: '🌍',
-    title: 'Sustainability First',
-    desc: 'We work exclusively with farms that use regenerative practices — building soil health, not depleting it.',
-  },
-  {
-    icon: '🔬',
-    title: 'Science-Backed Quality',
-    desc: 'Every batch is tested by an independent ISO-certified lab for purity, nutrition, and contaminants.',
-  },
-  {
-    icon: '🤝',
-    title: 'Fair Trade Always',
-    desc: 'Our farmers receive above-market prices. When they thrive, the entire supply chain benefits.',
-  },
+  { icon: '🍃', title: 'Freshness First', desc: 'Each batch is ground on demand so you always get flour at its peak taste, texture, and quality.' },
+  { icon: '🪟', title: 'Simplicity & Transparency', desc: 'No complicated systems. No hidden additives. Just clean grains, freshly milled — exactly as you choose.' },
+  { icon: '🤝', title: 'Care in Every Step', desc: 'This is a small, friend‑circle operation. Orders are handled personally, and quality is checked at every step.' },
 ]
 
 const team = [
-  {
-    name: 'Sarah Chen',
-    role: 'Co-Founder & CEO',
-    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&q=80',
-    bio: 'Former food scientist with a passion for making organic nutrition accessible to everyone.',
-  },
-  {
-    name: 'Marcus Okafor',
-    role: 'Co-Founder & CTO',
-    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
-    bio: 'Ag-tech veteran who built our farm-to-door supply chain management system from the ground up.',
-  },
-  {
-    name: 'Leila Ahmadi',
-    role: 'Head of Sourcing',
-    photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80',
-    bio: 'Travels the world building relationships with the best certified organic farms and co-operatives.',
-  },
+  { name: 'Prital Patel', role: 'The Artist', photo: 'https://avatars.githubusercontent.com/u/17275893?v=4', bio: 'Creates every flour batch with hands-on care, treating each order like a small piece of craft.' },
+  { name: 'Gunjan Patel', role: 'Tech Human', photo: 'https://gravatar.com/avatar/a71d5c71e4c2236145ec0b8058bf9508', bio: 'Builds and maintains the simple tech behind our little flour project, keeping everything easy and smooth.' },
 ]
 </script>
