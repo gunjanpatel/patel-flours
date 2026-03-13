@@ -9,7 +9,7 @@ import type { OrderDb, OrderPayload } from '../utils/orderHandler'
 
 export interface Env {
   DB: D1Database
-  ALLOWED_ORIGIN: string // e.g. https://yourusername.github.io
+  ALLOWED_ORIGIN: string
 }
 
 function corsHeaders(origin: string, allowed: string): Record<string, string> {

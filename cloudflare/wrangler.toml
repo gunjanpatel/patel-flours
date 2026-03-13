@@ -1,23 +1,23 @@
-name = "organic-shop-worker"
+name = "patel-flours"
 main = "worker.ts"
 compatibility_date = "2024-09-20"
 compatibility_flags = ["nodejs_compat"]
 
 # Environment variables (non-secret)
 [vars]
-ALLOWED_ORIGIN = "https://yourusername.github.io"
+ALLOWED_ORIGIN = "*"
 
 # D1 Database binding
 [[d1_databases]]
 binding = "DB"
-database_name = "organic-shop-db"
-database_id = "YOUR_D1_DATABASE_ID"   # fill after: wrangler d1 create organic-shop-db
+database_name = "patel-flours"
+database_id = "294c968e-9e5d-4cc0-b8ec-22ff087d1f04"
 
 # ------------------------------------------------------------------
 # Deployment steps:
-#   1.  wrangler d1 create organic-shop-db
+#   1.  wrangler d1 create patel-flours
 #       → copy the database_id above
-#   2.  wrangler d1 execute organic-shop-db --file=schema.sql
+#   2.  wrangler d1 execute patel-flours --file=schema.sql
 #   3.  wrangler deploy
 #   4.  Copy the Worker URL → paste into utils/config.ts → WORKER_URL
 #   5.  Update ALLOWED_ORIGIN to your GitHub Pages domain
