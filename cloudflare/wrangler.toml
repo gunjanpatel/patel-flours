@@ -7,18 +7,13 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 ALLOWED_ORIGIN = "https://shop.gunjanpatel.info"
 
+[[routes]]
+pattern = "api.gunjanpatel.info"
+zone_name= "gunjanpatel.info"
+custom_domain = true
+
 # D1 Database binding
 [[d1_databases]]
 binding = "DB"
 database_name = "patel-flours"
 database_id = "294c968e-9e5d-4cc0-b8ec-22ff087d1f04"
-
-# ------------------------------------------------------------------
-# Deployment steps:
-#   1.  wrangler d1 create patel-flours
-#       → copy the database_id above
-#   2.  wrangler d1 execute patel-flours --file=schema.sql
-#   3.  wrangler deploy
-#   4.  Copy the Worker URL → paste into utils/config.ts → WORKER_URL
-#   5.  Update ALLOWED_ORIGIN to your GitHub Pages domain
-# ------------------------------------------------------------------

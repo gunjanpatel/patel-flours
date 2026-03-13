@@ -33,6 +33,7 @@ jobs:
           NUXT_APP_BASE_URL: /
           NUXT_PUBLIC_SHEET_ID: ${{ secrets.NUXT_PUBLIC_SHEET_ID }}
           NUXT_PUBLIC_WORKER_URL: ${{ secrets.NUXT_PUBLIC_WORKER_URL }}
+          NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
 
       - uses: actions/configure-pages@v5
 
