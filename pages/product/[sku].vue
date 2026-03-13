@@ -171,7 +171,7 @@ function addToCart() {
 }
 
 const productFeatures = [
-  { icon: '🌱', label: 'Certified Organic' },
+  { icon: '🌱', label: 'Organic' },
   { icon: '🚚', label: 'Fast Dispatch' },
   { icon: '♻️', label: 'Eco Packaging' },
 ]

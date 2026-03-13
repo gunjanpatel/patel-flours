@@ -1,13 +1,27 @@
+# Dependencies
 node_modules
+
+# Nuxt build output
 .output
 .nuxt
 .nitro
 .cache
 dist
+
+# Logs
 *.log
+npm-debug.log*
+
+# Environment — NEVER commit real secrets
 .env
 .env.local
 .env.*.local
+# Allow the example file (has no real values)
 !.env.example
+
+# Local SQLite DB (dev orders)
 .data
+
+# Windows metadata artifacts
 *.Identifier
+*Zone.Identifier

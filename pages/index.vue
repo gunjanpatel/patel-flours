@@ -9,7 +9,7 @@
             class="inline-block text-xs font-medium tracking-widest uppercase px-3 py-1.5 rounded-full border"
             style="color: var(--accent); background-color: var(--accent-bg); border-color: var(--accent-border)"
           >
-            Certified Organic
+            Homely Grinded
           </span>
           <h1 class="font-serif text-5xl sm:text-6xl leading-[1.1] tracking-tight" style="color: var(--text-primary)">
             Freshly Ground<br>For You.
@@ -52,7 +52,7 @@
               <span class="text-lg">🌾</span>
             </div>
             <div>
-              <p class="text-xs font-semibold" style="color: var(--text-primary)">Happy Customers</p>
+              <p class="text-xs font-semibold" style="color: var(--text-primary)">Happy Friends</p>
               <div class="flex gap-0.5 mt-0.5">
                 <span v-for="i in 5" :key="i" class="text-accent-400 text-xs">★</span>
               </div>

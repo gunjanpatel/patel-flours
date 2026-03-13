@@ -33,9 +33,7 @@
           v-for="v in product.variants"
           :key="v"
           class="px-2.5 py-1 rounded-full text-xs border transition-colors leading-none"
-          :class="selectedVariant === v
-            ? 'bg-brand-500 text-white border-brand-500'
-            : 'hover:border-brand-400'"
+          :class="selectedVariant === v ? 'bg-brand-500 text-white border-brand-500' : 'hover:border-brand-400'"
           :style="selectedVariant !== v ? `background-color: var(--bg-muted); color: var(--text-secondary); border-color: var(--border)` : ''"
           @click.prevent="selectedVariant = v"
         >
@@ -48,16 +46,33 @@
         <span class="text-brand-500 font-semibold text-base">
           DKK {{ displayPrice.toFixed(2) }}
         </span>
+
+        <!-- Add button — shows ✓ Added briefly after click -->
         <button
-          class="text-white text-xs font-medium px-3.5 py-2 rounded-full transition-colors flex items-center gap-1.5"
-          :class="product.active ? 'bg-brand-500 hover:bg-brand-600' : 'bg-stone-400 cursor-not-allowed'"
+          class="text-white text-xs font-medium px-3.5 py-2 rounded-full transition-all duration-200 flex items-center gap-1.5 min-w-[72px] justify-center"
+          :class="[
+            !product.active ? 'bg-stone-400 cursor-not-allowed' :
+            added ? 'bg-brand-600 scale-95' : 'bg-brand-500 hover:bg-brand-600'
+          ]"
           :disabled="!product.active"
           @click.prevent="addToCart"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          Add
+          <Transition name="btn-swap" mode="out-in">
+            <!-- Added state -->
+            <span v-if="added" key="added" class="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+              Added
+            </span>
+            <!-- Default state -->
+            <span v-else key="add" class="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add
+            </span>
+          </Transition>
         </button>
       </div>
     </div>
@@ -72,6 +87,7 @@ const { add } = useCart()
 
 const hasVariants = computed(() => props.product.variants.length > 0)
 const selectedVariant = ref(props.product.variants[0] ?? '')
+const added = ref(false)
 
 watch(() => props.product.variants, (variants) => {
   if (variants.length && !variants.includes(selectedVariant.value)) {
@@ -85,7 +101,7 @@ const displayPrice = computed(() => {
 })
 
 function addToCart() {
-  if (!props.product.active) return
+  if (!props.product.active || added.value) return
   add({
     sku: props.product.sku,
     name: props.product.name,
@@ -94,5 +110,22 @@ function addToCart() {
     variant: selectedVariant.value,
     qty: props.product.qtyDefault ?? 1,
   })
+  added.value = true
+  setTimeout(() => { added.value = false }, 1800)
 }
 </script>
+
+<style scoped>
+.btn-swap-enter-active,
+.btn-swap-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.btn-swap-enter-from {
+  opacity: 0;
+  transform: translateY(4px);
+}
+.btn-swap-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>

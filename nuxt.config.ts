@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
   ssr: false,
-  debug: true,
+  debug: false,
   runtimeConfig: {
     public: {
       sheetId: process.env.NUXT_PUBLIC_SHEET_ID ?? 'MOCK',
