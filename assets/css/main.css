@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #FAF7F2;
+    color: #1a1a1a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #FAF7F2;
+  }
+
+  h1, h2, h3 {
+    font-family: 'DM Serif Display', Georgia, serif;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .font-serif {
+    font-family: 'DM Serif Display', Georgia, serif;
+  }
+}
+
+/* Nuxt UI color overrides to match brand */
+:root {
+  --color-primary-50: #f2f7ee;
+  --color-primary-100: #deecd4;
+  --color-primary-200: #bed9aa;
+  --color-primary-300: #97c17a;
+  --color-primary-400: #72a551;
+  --color-primary-500: #4B7C38;
+  --color-primary-600: #3d6530;
+  --color-primary-700: #2f4e24;
+  --color-primary-800: #223819;
+  --color-primary-900: #14210f;
+  --color-primary-950: #0a1207;
+}

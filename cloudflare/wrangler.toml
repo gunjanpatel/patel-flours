@@ -1,0 +1,24 @@
+name = "organic-shop-worker"
+main = "worker.ts"
+compatibility_date = "2024-09-20"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables (non-secret)
+[vars]
+ALLOWED_ORIGIN = "https://shop.gunjanpatel.info"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "organic-shop-db"
+database_id = "YOUR_D1_DATABASE_ID"   # fill after: wrangler d1 create organic-shop-db
+
+# ------------------------------------------------------------------
+# Deployment steps:
+#   1.  wrangler d1 create organic-shop-db
+#       → copy the database_id above
+#   2.  wrangler d1 execute organic-shop-db --file=schema.sql
+#   3.  wrangler deploy
+#   4.  Copy the Worker URL → paste into utils/config.ts → WORKER_URL
+#   5.  Update ALLOWED_ORIGIN to your GitHub Pages domain
+# ------------------------------------------------------------------
