@@ -12,8 +12,12 @@ export interface Env {
   ALLOWED_ORIGIN: string
 }
 
-function corsHeaders(origin: string, allowed: string): Record<string, string> {
-  const allowedOrigin = allowed || '*'
+const DEV_ORIGINS = ['http://localhost:3000', 'http://localhost:3001']
+
+function corsHeaders(origin: string, env: Env): Record<string, string> {
+  const allowed = [...DEV_ORIGINS, env.ALLOWED_ORIGIN].filter(Boolean)
+  // Echo back the exact origin if it's in the allowed list — browser requires exact match
+  const allowedOrigin = allowed.includes(origin) ? origin : env.ALLOWED_ORIGIN
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -31,21 +35,18 @@ function json(data: unknown, status = 200, extraHeaders: Record<string, string> 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const origin = request.headers.get('Origin') ?? ''
-    const cors = corsHeaders(origin, env.ALLOWED_ORIGIN)
+    const cors = corsHeaders(origin, env)
 
-    // Preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: cors })
     }
 
     const url = new URL(request.url)
 
-    // Health check
     if (url.pathname === '/health' && request.method === 'GET') {
       return json({ ok: true }, 200, cors)
     }
 
-    // POST /order
     if (url.pathname === '/order' && request.method === 'POST') {
       let payload: Partial<OrderPayload>
       try {
@@ -54,7 +55,6 @@ export default {
         return json({ success: false, error: 'Invalid JSON body.' }, 400, cors)
       }
 
-      // D1 adapter — same interface as the SQLite adapter in server/api/order.post.ts
       const d1Db: OrderDb = {
         async save(id, name, phone, itemsJson, total, paymentMethod, createdAt) {
           await env.DB.prepare(INSERT_ORDER_SQL)
