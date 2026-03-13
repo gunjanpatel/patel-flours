@@ -7,7 +7,7 @@
  *   country    — the detected country name (for the blocked message)
  */
 
-type Status = 'pending' | 'allowed' | 'blocked'
+type Status = 'pending' | 'allowed' | 'blocked' | 'fail'
 
 const status = ref<Status>('pending')
 const country = ref('')
@@ -19,7 +19,7 @@ export function useDenmarkOnly() {
     fetch('http://ip-api.com/json/?fields=16387')
       .then((r) => r.json())
       .then((data) => {
-        country.value = data.country ?? 'your country'
+        country.value = data.country ?? 'unknown'
         status.value = data.countryCode === 'DK' ? 'allowed' : 'blocked'
       })
       .catch(() => {
@@ -30,7 +30,7 @@ export function useDenmarkOnly() {
 
   const isPending = computed(() => status.value === 'pending')
   const isAllowed = computed(() => status.value === 'allowed')
-  const isBlocked = computed(() => status.value === 'blocked')
+  const isBlocked = computed(() => status.value === 'blocked' || status.value === 'fail')
 
   return { isPending, isAllowed, isBlocked, country }
 }
