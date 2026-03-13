@@ -29,6 +29,8 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   const config = useRuntimeConfig()
   const sheetId: string = config.public.sheetId ?? ''
 
+  console.log(sheetId)
+
   if (!sheetId || sheetId === 'YOUR_SHEET_ID_HERE') {
     console.error('[products] NUXT_PUBLIC_SHEET_ID is not set in .env — cannot load products.')
     nuxtApp.provide('products', [])
@@ -51,8 +53,6 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
       const label = (col.label ?? col.id ?? '').trim().toLowerCase()
       if (label) colIndex[label] = i
     })
-
-    console.debug('[products] Detected columns:', colIndex)
 
     const required = ['sku', 'name', 'price', 'active']
     const missing = required.filter((k) => colIndex[k] === undefined)
@@ -149,9 +149,6 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
       .filter((p): p is Product => p !== null)
 
     const activeCount = products.filter((p) => p.active).length
-    console.info(
-      `[products] Loaded ${products.length} products (${activeCount} active, ${products.length - activeCount} discontinued) from Google Sheet.`
-    )
     nuxtApp.provide('products', products)
     nuxtApp.provide('productsError', null)
   } catch (e: any) {

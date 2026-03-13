@@ -44,7 +44,7 @@ export const INSERT_ORDER_SQL =
 const PHONE_RE = /^\+?[0-9\s\-().]{8,15}$/
 
 export function generateId(): string {
-  return 'GC-' + Math.random().toString(36).slice(2, 10).toUpperCase()
+  return 'DY-' + Math.random().toString(36).slice(2, 10).toUpperCase()
 }
 
 export function validate(payload: Partial<OrderPayload>): string | null {

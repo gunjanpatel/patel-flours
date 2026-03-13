@@ -116,4 +116,4 @@ organic-shop/
 
 ## Checkout Flow (dev mode)
 
-If `WORKER_URL` is not configured, checkout simulates a successful order locally (generates a fake `GC-XXXXXXXX` ID). No real data is sent.
+If `WORKER_URL` is not configured, checkout simulates a successful order locally (generates a fake `DY-XXXXXXXX` ID). No real data is sent.

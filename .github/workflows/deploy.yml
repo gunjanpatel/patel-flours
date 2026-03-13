@@ -31,9 +31,8 @@ jobs:
         run: npm run generate
         env:
           NUXT_APP_BASE_URL: /${{ github.event.repository.name }}/
-
-      - name: Copy 404 fallback
-        run: cp .output/public/index.html .output/public/404.html
+          NUXT_PUBLIC_SHEET_ID: ${{ secrets.NUXT_PUBLIC_SHEET_ID }}
+          NUXT_PUBLIC_WORKER_URL: ${{ secrets.NUXT_PUBLIC_WORKER_URL }}
 
       - uses: actions/configure-pages@v5
 

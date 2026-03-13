@@ -46,8 +46,9 @@
           </svg>
         </button>
 
-        <!-- Cart -->
+        <!-- Cart: hidden for non-DK visitors -->
         <button
+          v-if="isAllowed"
           class="relative p-2 rounded-full transition-colors"
           :style="`color: var(--text-secondary)`"
           aria-label="Open cart"
@@ -107,6 +108,7 @@ import { NAV_LINKS } from '~/utils/config'
 
 const { count } = useCart()
 const cartOpen = useState('cart-open', () => false)
+const { isAllowed } = useDenmarkOnly()
 const menuOpen = ref(false)
 
 const colorMode = useColorMode()

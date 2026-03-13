@@ -1,10 +1,10 @@
 export default defineNuxtConfig({
   ssr: false,
-  debug: false,
+  debug: true,
   runtimeConfig: {
     public: {
-      sheetId: process.env.NUXT_PUBLIC_SHEET_ID ?? 'MOCK',
-      workerUrl: process.env.NUXT_PUBLIC_WORKER_URL ?? 'MOCK',
+      sheetId: '',
+      workerUrl: '',
     },
   },
 
