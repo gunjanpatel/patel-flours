@@ -28,7 +28,7 @@ function getDb(): ReturnType<typeof Database> {
       phone          TEXT NOT NULL,
       items          TEXT NOT NULL,
       total          REAL NOT NULL,
-      payment_method TEXT NOT NULL DEFAULT 'cash_on_delivery',
+      payment_method TEXT NOT NULL DEFAULT 'payment_on_delivery',
       created_at     TEXT NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders (created_at);
@@ -36,7 +36,7 @@ function getDb(): ReturnType<typeof Database> {
   // Migration: add payment_method to databases created before this column existed.
   const cols = db.prepare(`PRAGMA table_info(orders)`).all() as { name: string }[]
   if (!cols.some((c) => c.name === 'payment_method')) {
-    db.exec(`ALTER TABLE orders ADD COLUMN payment_method TEXT NOT NULL DEFAULT 'cash_on_delivery'`)
+    db.exec(`ALTER TABLE orders ADD COLUMN payment_method TEXT NOT NULL DEFAULT 'payment_on_delivery'`)
   }
   _db = db
   return db

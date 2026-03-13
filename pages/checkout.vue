@@ -87,9 +87,9 @@
           <h2 class="font-serif text-xl" style="color: var(--text-primary)">Payment Method</h2>
           <label
             class="flex items-start gap-4 p-4 rounded-xl border-2 cursor-pointer transition-colors"
-            :class="paymentMethod === 'cash_on_delivery' ? 'border-brand-500 bg-brand-500/5' : 'border-stone-200 hover:border-stone-300'"
+            :class="paymentMethod === 'payment_on_delivery' ? 'border-brand-500 bg-brand-500/5' : 'border-stone-200 hover:border-stone-300'"
           >
-            <input v-model="paymentMethod" type="radio" value="cash_on_delivery" class="mt-0.5 accent-brand-500" />
+            <input v-model="paymentMethod" type="radio" value="payment_on_delivery" class="mt-0.5 accent-brand-500" />
             <div>
               <p class="text-sm font-medium" style="color: var(--text-primary)">Payment on Delivery</p>
               <p class="text-xs mt-0.5" style="color: var(--text-muted)">Pay when we deliver your flour.</p>
@@ -196,7 +196,7 @@ const safeCart = computed(() =>
 
 const form = reactive({ name: '', phone: '' })
 const errors = reactive({ name: '', phone: '' })
-const paymentMethod = ref<'cash_on_delivery'>('cash_on_delivery')
+const paymentMethod = ref<'payment_on_delivery'>('payment_on_delivery')
 const submitting = ref(false)
 const apiError = ref('')
 const orderSuccess = ref(false)

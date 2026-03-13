@@ -14,7 +14,7 @@ export interface OrderItem {
   price: number
 }
 
-export type PaymentMethod = 'cash_on_delivery'
+export type PaymentMethod = 'payment_on_delivery'
 
 export interface OrderPayload {
   name: string
@@ -59,7 +59,7 @@ export function validate(payload: Partial<OrderPayload>): string | null {
   if (!Array.isArray(payload.items) || payload.items.length === 0) {
     return 'Order must contain at least one item.'
   }
-  if (payload.payment_method !== 'cash_on_delivery') {
+  if (payload.payment_method !== 'payment_on_delivery') {
     return 'Please select a payment method.'
   }
   for (const item of payload.items) {
