@@ -1,7 +1,7 @@
 # Architecture Diagram
 
 ```mermaid
-graph TB
+graph LR
     subgraph Client["🌐 Browser (Visitor)"]
         UI["Nuxt 3 SPA\nshop.gunjanpatel.info"]
     end
