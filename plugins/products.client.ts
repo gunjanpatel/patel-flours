@@ -29,8 +29,6 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   const config = useRuntimeConfig()
   const sheetId: string = config.public.sheetId ?? ''
 
-  console.log(sheetId)
-
   if (!sheetId || sheetId === 'YOUR_SHEET_ID_HERE') {
     console.error('[products] NUXT_PUBLIC_SHEET_ID is not set in .env — cannot load products.')
     nuxtApp.provide('products', [])

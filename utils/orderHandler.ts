@@ -101,3 +101,26 @@ export async function processOrder(
 
   return { orderId, total }
 }
+
+// ── Telegram ───────────────────────────────────────────────────────────────
+export async function sendTelegram(TELEGRAM_TOKEN: string, TELEGRAM_CHAT_ID: string, orderId: string, payload: OrderPayload): Promise<void> {
+  const items = payload.items
+    .map(i => `  • ${i.name}${i.variant ? ` (${i.variant})` : ''} × ${i.qty} — DKK ${(i.price * i.qty).toFixed(2)}`)
+    .join('\n')
+  const text = [
+    `🛒 *New Order — ${orderId}*`,
+    ``,
+    `👤 *Customer:* ${payload.name}`,
+    `📞 *Phone:* ${payload.phone}`,
+    ``,
+    `*Items:*`,
+    items,
+    ``,
+    `💰 *Total: DKK ${payload.total.toFixed(2)}*`,
+  ].join('\n')
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text, parse_mode: 'Markdown' }),
+  })
+}

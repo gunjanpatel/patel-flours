@@ -1,6 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import { processOrder, INSERT_ORDER_SQL, OrderValidationError } from '../utils/orderHandler'
+import { processOrder, INSERT_ORDER_SQL, OrderValidationError, sendTelegram } from '../utils/orderHandler'
 import type { OrderDb, OrderPayload } from '../utils/orderHandler'
 
 export interface Env {
@@ -62,30 +62,6 @@ function json(data: unknown, status = 200, extraHeaders: Record<string, string> 
   })
 }
 
-// ── Telegram ───────────────────────────────────────────────────────────────
-async function sendTelegram(env: Env, orderId: string, payload: OrderPayload): Promise<void> {
-  if (!env.TELEGRAM_TOKEN || !env.TELEGRAM_CHAT_ID) return
-  const items = payload.items
-    .map(i => `  • ${i.name}${i.variant ? ` (${i.variant})` : ''} × ${i.qty} — DKK ${(i.price * i.qty).toFixed(2)}`)
-    .join('\n')
-  const text = [
-    `🛒 *New Order — ${orderId}*`,
-    ``,
-    `👤 *Customer:* ${payload.name}`,
-    `📞 *Phone:* ${payload.phone}`,
-    ``,
-    `*Items:*`,
-    items,
-    ``,
-    `💰 *Total: DKK ${payload.total.toFixed(2)}*`,
-  ].join('\n')
-  await fetch(`https://api.telegram.org/bot${env.TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: text, parse_mode: 'Markdown' }),
-  })
-}
-
 // ── Main handler ───────────────────────────────────────────────────────────
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -142,7 +118,7 @@ export default {
         const { orderId } = await processOrder(orderPayload, d1Db)
 
         // Fire and forget
-        sendTelegram(env, orderId, orderPayload as OrderPayload).catch(e =>
+        sendTelegram(env.TELEGRAM_TOKEN, env.TELEGRAM_CHAT_ID, orderId, orderPayload as OrderPayload).catch(e =>
           console.error('Telegram failed:', e)
         )
 

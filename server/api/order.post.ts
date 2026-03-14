@@ -10,7 +10,7 @@ import type { H3Event } from 'h3'
 import Database from 'better-sqlite3'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { processOrder, INSERT_ORDER_SQL, OrderValidationError } from '../../utils/orderHandler'
+import { processOrder, INSERT_ORDER_SQL, OrderValidationError, sendTelegram } from '../../utils/orderHandler'
 import type { OrderDb, OrderPayload } from '../../utils/orderHandler'
 
 // Lazy-singleton: one DB connection per worker process.
@@ -53,6 +53,12 @@ export default defineEventHandler(async (event: H3Event) => {
   const payload = await readBody<Partial<OrderPayload>>(event)
   try {
     const { orderId, total } = await processOrder(payload, sqliteDb)
+    // Fire and forget
+    const { TELEGRAM_TOKEN, TELEGRAM_CHAT_ID } = process.env as Env
+
+    sendTelegram(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, orderId, payload as OrderPayload).catch(e =>
+      console.error('Telegram failed:', e)
+    )
     console.info(`[local-db] Order saved: ${orderId} — ${payload.name} — $${total.toFixed(2)}`)
     setResponseStatus(event, 201)
     return { success: true, orderId }
