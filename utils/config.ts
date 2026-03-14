@@ -35,6 +35,10 @@ export interface CartItem {
 export const POPULAR_SKUS: string[] = [
   'organic-wheat-flour',
   'gram-flour',
-  'multigrain',
+  'baajri-flour',
+  'jowar-flour',
+  'multigrain-high-protein',
+  'multigrain-diabetes-friendly',
   'idli-dosa',
+  'mohanthaal-flour',
 ]
