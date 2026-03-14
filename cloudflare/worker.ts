@@ -64,7 +64,7 @@ function json(data: unknown, status = 200, extraHeaders: Record<string, string> 
 
 // ── Main handler ───────────────────────────────────────────────────────────
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const origin = request.headers.get('Origin') ?? ''
     const cors = corsHeaders(origin, env)
 
@@ -117,9 +117,10 @@ export default {
       try {
         const { orderId } = await processOrder(orderPayload, d1Db)
 
-        // Fire and forget
-        sendTelegram(env.TELEGRAM_TOKEN, env.TELEGRAM_CHAT_ID, orderId, orderPayload as OrderPayload).catch(e =>
-          console.error('Telegram failed:', e)
+        ctx.waitUntil(
+          sendTelegram(env.TELEGRAM_TOKEN, env.TELEGRAM_CHAT_ID, orderId, orderPayload as OrderPayload).catch(e =>
+            console.error('Telegram failed:', e)
+          )
         )
 
         return json({ success: true, orderId }, 201, cors)
