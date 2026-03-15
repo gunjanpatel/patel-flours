@@ -4,46 +4,7 @@
 
 This repo is the reference implementation behind a blog post on building lean e-commerce for startups and hobby projects. The idea is simple: stop paying $30-100/month for popular third party hosting who take cut from your profit, when the same outcome is achievable with free-tier cloud services stitched together thoughtfully.
 
----
-
-## 💰 Cost Breakdown
-
-| Service | What it does | Free tier | Paid starts at |
-|---------|-------------|-----------|----------------|
-| **GitHub Pages** | Static hosting + CDN | Unlimited | Never needed |
-| **GitHub Actions** | CI/CD auto-deploy | 2,000 min/month | $4/month |
-| **Cloudflare CDN** | Cache, DDoS, SSL | Unlimited | Never needed |
-| **Cloudflare Workers** | Serverless order API | 100,000 req/day | $5/month |
-| **Cloudflare D1** | SQLite order database | 5GB, 25M reads/day | $0.001/GB |
-| **Cloudflare Turnstile** | Bot protection | Unlimited | Never needed |
-| **Google Sheets** | Product catalogue CMS | Unlimited | Never needed |
-| **ip-api.com** | Geo restriction | 45 req/min | Never needed |
-| **Telegram Bot** | Order notifications | Unlimited | Never needed |
-| **Total** | | **$0/month** | — |
-
-For a small business doing a few hundred orders a month, you will never hit a paid tier.
-
----
-
-## 🏗️ Architecture
-
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full diagram.
-
-```
-Customer Browser
-      │
-      ▼
-GitHub Pages (static Nuxt SPA)
-      │
-      ├── Google Sheets ──────── Product catalogue (live, no deploy needed)
-      ├── ip-api.com ─────────── Geo-restrict to Denmark
-      ├── Cloudflare Turnstile ── Bot protection on checkout
-      │
-      └── Cloudflare Worker ──── Order API (POST /order)
-                │
-                ├── Cloudflare D1 ── Persist order to database
-                └── Telegram Bot ─── Instant notification to your phone
-```
+Read about story, cost breakdown and architecture on blog post https://gunjanpatel.info/blog/honey-i-shrunk-the-cloud-bill/
 
 ---
 
